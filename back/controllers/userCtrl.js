@@ -16,6 +16,7 @@ exports.signup = (req, res, next) => {
     .then((hash) => {
       const user = new User({
         email: req.body.email,
+        pseudo : req.body.pseudo,
         password: hash,
       });
       user
@@ -28,16 +29,19 @@ exports.signup = (req, res, next) => {
 
 // Création et exportation de la logique de connexion et attribution de token
 exports.login = (req, res, next) => {
-  console.log()
-  User.findOne({ email: req.body.email })
+  
+  const data = req.body
+
+  User.findOne({ email: data.email })
     .then((user) => {
       if (!user) {
         return res
           .status(401)
           .json({ error: "Identifiant ou mot de passe incorect" });
       }
+
       bcrypt
-        .compare(req.body.password, user.password)
+        .compare(data.password, user.password)
         .then((valid) => {
           if (!valid) {
             return res

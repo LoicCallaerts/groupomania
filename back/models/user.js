@@ -16,7 +16,7 @@ const userSchema = mongoose.Schema({
   },
   password: { type: String, require: true },
 
-  username: { type: String, require: true}
+  pseudo: { type: String, require: true}
 });
 
 // Appel à la fonction unique validator

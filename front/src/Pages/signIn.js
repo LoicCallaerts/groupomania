@@ -1,4 +1,5 @@
 import * as React from "react";
+import {useNavigate} from "react-router-dom"
 // MUI
 import {Button, TextField, Link, Box, Typography,  Container, Grid} from "@mui/material"
 // Assets
@@ -8,6 +9,8 @@ import signInLogo from "../assets/icons/icon-left-font.png";
 const API_URL = process.env.REACT_APP_API_URL
 
 export default function SignIn() {
+
+  const navigate = useNavigate()
 
   const styles = {
     mainContainer: {
@@ -24,11 +27,6 @@ export default function SignIn() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // const data = new FormData(event.currentTarget);
-    
-    console.log(username, password);
-
-    console.log(API_URL)
 
     const body = {
       email: username,
@@ -37,10 +35,15 @@ export default function SignIn() {
 
     fetch(`${API_URL}/api/auth/login`, {
       method: "POST",
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
+      headers : { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+       }
     }).then((res) => {
-      console.log(res)
-      console.log(res.status)
+        if (res.status === 200) {
+          navigate("/home")
+        } 
     }).catch(err => console.log(err))
   };
 
@@ -57,7 +60,7 @@ export default function SignIn() {
                 flexDirection: "column",
                 alignItems: "center",
                 bgcolor: "#ffffff",
-                padding: 15
+                p: 15
               }} 
             >
 
