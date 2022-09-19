@@ -44,7 +44,7 @@ export default function SignUp() {
     })
       .then((res) => {
         if (res.status === 201) {
-          navigate("/home");
+          navigate("/signin");
         }
       })
       .catch((err) => console.log(err));
