@@ -8,7 +8,7 @@ const fs = require("fs");
 const mongoose = require("mongoose");
 
 // Récupération des chemin (GET, POST, PUT, DELETE) pour les sauces
-const saucePath = require("./path/saucePath");
+const articlePath = require("./path/articlePath");
 //Récuperation des chemins POST pour la connection et la création de comptes
 const userPath = require("./path/userPath");
 const path = require("path");
@@ -52,7 +52,7 @@ app.use((req, res, next) => {
 
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(express.static("images"));
-app.use("/api/sauces", saucePath);
+app.use("/api/article", articlePath);
 app.use("/api/auth", userPath);
 
 module.exports = app;

@@ -5,14 +5,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignIn from "./Pages/signIn";
 import SignUp from "./Pages/signUp";
 import Home from "./Pages/home";
+import AddPost from "./Pages/AddPost";
 // Theme
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Lato from "./font/Lato-Regular.ttf";
 import CssBaseline from "@mui/material/CssBaseline";
 // Misc
 import reportWebVitals from "./reportWebVitals";
-
-
 
 const theme = createTheme({
   typography: {
@@ -43,6 +42,7 @@ root.render(
         <Route path="/" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/creatpost" element={<AddPost />} />
       </Routes>
     </BrowserRouter>
   </ThemeProvider>
