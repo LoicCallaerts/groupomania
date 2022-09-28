@@ -5,10 +5,6 @@ const User = require("../models/user");
 //Importation du modul jsonwebtoken pour créé des token de connexion
 const jwt = require("jsonwebtoken");
 
-let emailRegExp = new RegExp(
-  "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
-);
-
 // Création et exportation de la logique de création de comptes
 exports.signup = (req, res, next) => {
   bcrypt
@@ -47,12 +43,17 @@ exports.login = (req, res, next) => {
               .status(401)
               .json({ error: "Identifiant ou mot de passe incorect" });
           }
-          res.status(200).json({
-            userId: user._id,
-            token: jwt.sign({ userId: user._id }, "RANDOM_TOKEN_SECRET", {
-              expiresIn: "24h",
-            }),
-          });
+          res
+            .status(200)
+            // .cookie("access_token", token, {
+            //   httpOnly: true,
+            // })
+            .json({
+              userId: user._id,
+              token: jwt.sign({ userId: user._id }, "RANDOM_TOKEN_SECRET", {
+                expiresIn: "24h",
+              }),
+            });
         })
         .catch((error) => res.status(500).json({ error }));
     })

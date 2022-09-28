@@ -10,6 +10,7 @@ import {
   Container,
   Grid,
 } from "@mui/material";
+import { useCookies } from "react-cookie";
 // Assets
 import background from "../assets/signIn.jpg";
 import signInLogo from "../assets/icons/icon-left-font.png";
@@ -31,21 +32,23 @@ export default function SignIn() {
 
   const [username, setUsername] = React.useState();
   const [password, setPassword] = React.useState();
+  const [cookies, setCookie] = useCookies(["user"]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setCookie("res.token", "res.userId", { path: "/" });
 
-    const body = {
+    const user = {
       email: username,
       password: password,
     };
 
     fetch(`${API_URL}/api/auth/login`, {
       method: "POST",
-      body: JSON.stringify(body),
+      body: JSON.stringify(user),
       headers: {
-        "Content-Type": "application/json",
         Accept: "application/json",
+        "Content-Type": "application/json",
       },
     })
       .then((res) => {

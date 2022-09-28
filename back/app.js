@@ -13,18 +13,22 @@ const articlePath = require("./path/articlePath");
 const userPath = require("./path/userPath");
 const path = require("path");
 
+const cookieParser = require("cookie-parser");
+
 //Importation des variables d'environement pour cacher le User et le password
 require("dotenv").config();
 const usrAdmin = process.env.ADMIN_USER;
 const userPassword = process.env.ADMIN_PASSWORD;
 
+const helmet = require("helmet");
+
 // Importation du modul helmet
 app.use(express.json());
-const helmet = require("helmet");
 
 app.use(express.urlencoded({ extended: true }));
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
+app.use(cookieParser());
 
 mongoose
   .connect(
