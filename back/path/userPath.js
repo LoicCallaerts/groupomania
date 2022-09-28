@@ -13,6 +13,7 @@ router.post("/signup", password, userCtrl.signup);
 // Chemin POST pour se connecter à un compte existant
 router.post("/login", userCtrl.login);
 
+// Chemin DELETE pour la déconexion
 router.delete("/logout", userCtrl.logout);
 
 module.exports = router;
