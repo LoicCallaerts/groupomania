@@ -16,7 +16,7 @@ exports.signup = (req, res, next) => {
     .then((hash) => {
       const user = new User({
         email: req.body.email,
-        pseudo : req.body.pseudo,
+        pseudo: req.body.pseudo,
         password: hash,
       });
       user
@@ -29,8 +29,7 @@ exports.signup = (req, res, next) => {
 
 // Création et exportation de la logique de connexion et attribution de token
 exports.login = (req, res, next) => {
-  
-  const data = req.body
+  const data = req.body;
 
   User.findOne({ email: data.email })
     .then((user) => {
@@ -58,4 +57,18 @@ exports.login = (req, res, next) => {
         .catch((error) => res.status(500).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
+};
+
+exports.logout = (req, res) => {
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        res.status(400).send("Unable to log out");
+      } else {
+        res.send("Logout successful");
+      }
+    });
+  } else {
+    res.end();
+  }
 };

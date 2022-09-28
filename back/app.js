@@ -19,11 +19,11 @@ const usrAdmin = process.env.ADMIN_USER;
 const userPassword = process.env.ADMIN_PASSWORD;
 
 // Importation du modul helmet
+app.use(express.json());
 const helmet = require("helmet");
 
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.json());
 app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
 
 mongoose

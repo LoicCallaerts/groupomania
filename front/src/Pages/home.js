@@ -1,5 +1,7 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
+
+// Import MUI
 import {
   AppBar,
   Box,
@@ -13,9 +15,13 @@ import {
   CardMedia,
   TextField,
 } from "@mui/material/";
+
+// Import Assets
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ImageSearchIcon from "@mui/icons-material/ImageSearch";
 import Logo from "../assets/icons/icon-left-font-monochrome-white.png";
+
+//Import API
 const API_URL = process.env.REACT_APP_API_URL;
 
 export default function Home() {
@@ -26,27 +32,60 @@ export default function Home() {
   const [imageUrl, setImageUrl] = React.useState();
   const [likes, setLikes] = React.useState();
 
-  const handleSubmit = (event) => {
+  const postForm = React.useRef(null);
+  const imageInput = React.useRef(null);
+
+  const [postDescription, setPostDescription] = React.useState("");
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const body = {
+    const formData = new FormData();
+    const image = imageInput.current.files[0];
+
+    formData.append("imageUrl", image);
+    formData.append("description", postDescription);
+    formData.append("pseudo", "tartenpion");
+    formData.append("userId", "tartenpion");
+
+    console.log(formData.get("imageUrl"));
+    console.log(formData.get("description"));
+    console.log(formData.get("pseudo"));
+    console.log(formData);
+
+    let article = {
+      imageUrl: image,
+      description: postDescription,
       pseudo: pseudo,
-      description: description,
-      imageUrl: imageUrl,
-      likes: likes,
     };
 
-    const postArticle = fetch(`${API_URL}/api/article`, {
+    await fetch(`${API_URL}/api/article`, {
       method: "POST",
-      body: JSON.stringify(body),
+      body: JSON.stringify(article),
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        Accept: "multipart/form-data",
       },
     })
       .then((res) => {
         if (res.status === 200) {
-          navigate("/home");
+          console.log("success", res.data);
+          getPosts();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log(formData);
+      });
+  };
+
+  const getPosts = () => {
+    console.log("fetching posts");
+    fetch(`${API_URL}/api/article`, {
+      method: "GET",
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("success", res.data);
         }
       })
       .catch((err) => console.log(err));
@@ -82,7 +121,6 @@ export default function Home() {
       </Box>
 
       <Box
-        component="form"
         sx={{
           pt: 5,
           pl: 54,
@@ -94,29 +132,39 @@ export default function Home() {
           borderRadius: "16px",
           "& .MuiTextField-root": { m: 1, width: "25ch" },
         }}
-        noValidate
-        autoComplete="off"
       >
-        <TextField
-          id="description"
-          label="Quoi de neuf ? "
-          multiline
-          maxRows={4}
-          inputProps={{ maxLength: 500 }}
-        />
-        <IconButton aria-label="Tu peux ajouter une image" component="label">
-          <input hidden accept="image/*" type="file" />
-          <ImageSearchIcon />
-        </IconButton>
-        <Button
-          color="inherit"
-          variant="h2"
-          size="medium"
-          component="div"
-          width="30%"
-        >
-          Envois
-        </Button>
+        <form ref={postForm}>
+          <TextField
+            id="description"
+            label="Quoi de neuf ? "
+            name="description"
+            multiline
+            maxRows={4}
+            inputProps={{ maxLength: 500 }}
+            value={postDescription}
+            onChange={(e) => setPostDescription(e.target.value)}
+          />
+          <IconButton aria-label="Tu peux ajouter une image" component="label">
+            <input
+              hidden
+              accept="image/*"
+              type="file"
+              name="imageUrl"
+              ref={imageInput}
+            />
+            <ImageSearchIcon />
+          </IconButton>
+          <Button
+            color="inherit"
+            variant="h2"
+            size="medium"
+            component="div"
+            width="30%"
+            onClick={(e) => handleSubmit(e)}
+          >
+            Envois
+          </Button>
+        </form>
       </Box>
 
       <Box
